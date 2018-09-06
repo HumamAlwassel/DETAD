@@ -1,5 +1,5 @@
 # Diagnosing Error in Temporal Action Detectors (DETAD)
-This repository is intended to hosts the diagnosis tool for analyzing temporal action localization algorithms. It includes three analyses: false positive analysis, localization metric sensitivity analysis, and false negative analysis. Please take a look at our [DETAD paper](http://humamalwassel.com/publication/detad/), in which we first proposed this tool and presented an in-depth diagnosis of the state-of-the-art temporal action localization algorithms on both ActivityNet v1.3 and THUMOS14.
+This repository is intended to host the diagnosis tool for analyzing temporal action localization algorithms. It includes three analyses: false positive analysis, localization metric sensitivity analysis, and false negative analysis. Please take a look at our [DETAD paper](http://humamalwassel.com/publication/detad/), in which we first proposed this tool and presented an in-depth diagnosis of the state-of-the-art temporal action localization algorithms on both ActivityNet v1.3 and THUMOS14.
 
 <img src="http://humamalwassel.com/img/headers/detad.jpg">
 
