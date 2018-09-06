@@ -1,19 +1,18 @@
 # Diagnosing Error in Temporal Action Detectors (DETAD)
-This repository is intended to hosts the diagnosis tool for analyzing temporal action localization algorithms. It includes three analyses: false positive analysis, localization metric sensitivity analysis, and false negative analysis.
+This repository is intended to hosts the diagnosis tool for analyzing temporal action localization algorithms. It includes three analyses: false positive analysis, localization metric sensitivity analysis, and false negative analysis. Please take a look at our [DETAD paper](http://humamalwassel.com/publication/detad/), in which we first proposed this tool and presented an in-depth diagnosis of the state-of-the-art temporal action localization algorithms on both ActivityNet v1.3 and THUMOS14.
 
 <img src="http://humamalwassel.com/img/headers/detad.jpg">
 
 If you find any piece of code valuable for your research, please cite this work:
 ```
-@inproceedings{alwassel2018detad,
+@inproceedings{alwassel_2018_detad,
   title={Diagnosing Error in Temporal Action Detectors},
   author={Alwassel, Humam and Caba Heilbron, Fabian and Escorcia, Victor and Ghanem, Bernard},
-  booktitle={European Conference on Computer Vision},
+  booktitle={The European Conference on Computer Vision (ECCV)},
+  month={September}
   year={2018}
 }
 ```
-
-Please take a look at [our paper](http://humamalwassel.com/publication/detad/), in which we first proposed this tool and presented an in-depth diagnosis of the state-of-the-art temporal action localization algorithms on both ActivityNet v1.3 and THUMOS14.
 
 # How to run it?
 
@@ -45,7 +44,7 @@ We provide augmented dataset files for the ActivityNet v1.3 (validation) and THU
 # Do you want to contribute?
 
 1. Check the open issues or open a new issue to start a discussion around your new idea or the bug you found
-2. For the repository and make your changes!
+2. Fork the repository and make your changes
 3. Send a pull request
 
 [web-humam]: http://www.humamalwassel.com
