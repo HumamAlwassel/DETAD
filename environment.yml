@@ -115,5 +115,5 @@ dependencies:
   - uuid==1.30
   - webencodings==0.5.1
   - werkzeug==0.12.2
-prefix: /home/humam/anaconda2/envs/action-search
+prefix: /home/humam/anaconda2/envs/detad
 
