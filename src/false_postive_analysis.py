@@ -144,7 +144,7 @@ def subplot_error_type_impact(fig, ax, values, labels, colors, xlabel, ylabel, t
 
 def plot_fp_analysis(fp_error_analysis, save_filename, 
                      colors=['#33a02c','#b2df8a','#1f78b4','#fb9a99','#e31a1c','#a6cee3'],
-                     error_names=['True Postive', 'Double Detection Err','Wrong Lable Err', 'Localization Err', 'Confusion Err', 'Background Err'],
+                     error_names=['True Positive', 'Double Detection Err','Wrong Label Err', 'Localization Err', 'Confusion Err', 'Background Err'],
                      figsize=(10,5), fontsize=24):
 
     values,labels = [],[]
@@ -161,7 +161,7 @@ def plot_fp_analysis(fp_error_analysis, save_filename,
                              values=values, labels=labels, colors=colors,
                              xticks=error_names,
                              xlabel='Top Predicitons', ylabel='Error Breakdown ($\%$)',
-                             title='False Postive Profile', fontsize=fontsize, 
+                             title='False Positive Profile', fontsize=fontsize, 
                              ncol=3, legend_loc=(-0.15,1.15))
 
     order = np.array([4,0,1,3,2])
