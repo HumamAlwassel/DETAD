@@ -160,7 +160,7 @@ def plot_fp_analysis(fp_error_analysis, save_filename,
     lgd = subplot_fp_profile(fig=fig, ax=fig.add_subplot(grid[:-2]),
                              values=values, labels=labels, colors=colors,
                              xticks=error_names,
-                             xlabel='Top Predicitons', ylabel='Error Breakdown ($\%$)',
+                             xlabel='Top Predictions', ylabel='Error Breakdown ($\%$)',
                              title='False Postive Profile', fontsize=fontsize, 
                              ncol=3, legend_loc=(-0.15,1.15))
 
