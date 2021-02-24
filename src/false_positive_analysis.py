@@ -168,7 +168,7 @@ def plot_fp_analysis(fp_error_analysis, save_filename,
     subplot_error_type_impact(fig=fig, ax=fig.add_subplot(grid[-2:]),
                               values=np.array([fp_error_analysis.average_mAP_gain.values()]).T[order,:], 
                               labels=np.array(fp_error_analysis.average_mAP_gain.keys())[order], 
-                              colors=colors[::-1],
+                              colors=np.array(colors[1:])[order],
                               xlabel='Error Type', ylabel='Average-mAP$_N$\nImprovment $(\%)$',
                               title='Removing Error Impact', fontsize=fontsize,
                               top=np.ceil(np.max(fp_error_analysis.average_mAP_gain.values())*100*1.1))
