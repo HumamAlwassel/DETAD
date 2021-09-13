@@ -16,6 +16,8 @@ If you find any piece of code valuable for your research, please cite this work:
 
 # How to run it?
 
+> :warning: **DETAD current code is based on Python 2. Switching to Python 3 might result in _logical_ errors in the false postivie analysis.** Please either use the Python 2 environment we provide in environment.yml, or make the suggested fixes from this [pull request](https://github.com/HumamAlwassel/DETAD/pull/8) if you are using your own Pyhton 3 environment. In either case, you should verify that you can reproduce the same example plots in [sample_output](sample_output/).
+
 Install conda, create the environment from the `environment.yml` file, and then activate the environment:
 ```
 conda env create -f environment.yml
