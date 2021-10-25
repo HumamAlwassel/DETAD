@@ -1,10 +1,8 @@
 import json
-import urllib2
 
 import numpy as np
 import pandas as pd
 
-from utils import get_blocked_videos
 from utils import interpolated_prec_rec
 from utils import segment_iou
 
@@ -23,7 +21,6 @@ class ActionDetectorDiagnosis(object):
                  min_tiou_thr=0.1,
                  subset='testing', 
                  verbose=False, 
-                 check_status=True,
                  load_extra_annotations=False,
                  characteristic_names_to_bins={'context-size': (range(-1,7), ['0','1','2','3','4','5','6']),
                                                'context-distance': (range(-1,4), ['Inf','N','M','F']),
@@ -44,7 +41,6 @@ class ActionDetectorDiagnosis(object):
         self.gt_fields = ground_truth_fields
         self.pred_fields = prediction_fields
         self.ap = None
-        self.check_status = check_status
         self.load_extra_annotations = load_extra_annotations
         self.characteristic_names_to_bins = characteristic_names_to_bins
         self.characteristic_names = characteristic_names_to_bins.keys()
@@ -52,11 +48,6 @@ class ActionDetectorDiagnosis(object):
         self.minimum_normalized_precision_threshold_for_detection = minimum_normalized_precision_threshold_for_detection
         self.evaluate_with_multi_segments = evaluate_with_multi_segments
 
-        # Retrieve blocked videos from server.
-        if self.check_status:
-            self.blocked_videos = get_blocked_videos()
-        else:
-            self.blocked_videos = list()
         # Import ground truth and predictions.
         self.ground_truth, self.activity_index = self._import_ground_truth(
             ground_truth_filename)
@@ -76,12 +67,12 @@ class ActionDetectorDiagnosis(object):
         self.min_tiou_thr = min_tiou_thr
 
         if self.verbose:
-            print '[INIT] Loaded annotations from {} subset.'.format(subset)
+            print('[INIT] Loaded annotations from {} subset.'.format(subset))
             nr_gt = len(np.unique(self.ground_truth['gt-id']))
-            print '\tNumber of ground truth instances: {}'.format(nr_gt)
+            print('\tNumber of ground truth instances: {}'.format(nr_gt))
             nr_pred = len(self.prediction)
-            print '\tNumber of predictions: {}'.format(nr_pred)
-            print '\tFixed threshold for tiou score: {}'.format(self.tiou_thresholds)
+            print('\tNumber of predictions: {}'.format(nr_pred))
+            print('\tFixed threshold for tiou score: {}'.format(self.tiou_thresholds))
 
 
     def _import_ground_truth(self, ground_truth_filename):
@@ -112,13 +103,11 @@ class ActionDetectorDiagnosis(object):
         video_lst, t_start_lst, t_end_lst, label_lst = [], [], [], []
         
         if self.load_extra_annotations:
-            print '[INIT] Loading extra annotations'
+            print('[INIT] Loading extra annotations')
             extra_annotations = dict(zip(self.characteristic_names,[[] for _ in range(len(self.characteristic_names))]))
 
-        for videoid, v in data['database'].iteritems():
+        for videoid, v in data['database'].items():
             if self.subset != v['subset']:
-                continue
-            if videoid in self.blocked_videos:
                 continue
             for ann in v['annotations']:
                 if ann['label'] not in activity_index:
@@ -157,7 +146,7 @@ class ActionDetectorDiagnosis(object):
             for characteristic_name in self.characteristic_names:
                 ground_truth[characteristic_name] = extra_annotations[characteristic_name]
 
-            for (characteristic_name, (bins, labels)) in self.characteristic_names_to_bins.iteritems():
+            for (characteristic_name, (bins, labels)) in self.characteristic_names_to_bins.items():
                 ground_truth[characteristic_name] = extra_annotations[characteristic_name]
                 ground_truth[characteristic_name] = pd.cut(ground_truth[characteristic_name], precision=2, bins=bins, labels=labels, include_lowest=True)
 
@@ -193,9 +182,7 @@ class ActionDetectorDiagnosis(object):
         # Read predictions.
         video_lst, t_start_lst, t_end_lst = [], [], []
         label_lst, score_lst = [], []
-        for videoid, v in data['results'].iteritems():
-            if videoid in self.blocked_videos:
-                continue
+        for videoid, v in data['results'].items():
             for result in v:
                 label = self.activity_index[result['label']]
                 video_lst.append(videoid)
@@ -287,11 +274,11 @@ class ActionDetectorDiagnosis(object):
         self.average_mPrecision = self.mPrecision.mean()
 
         if self.verbose:
-            print '[RESULTS] Performance on ActivityNet detection task.'
-            print '[RESULTS] Using %d annotation segment(s) per instance' % self.evaluate_with_multi_segments if self.evaluate_with_multi_segments and self.load_extra_annotations else ''
-            print '\tAverage-mAP{}: {}'.format('_N' if self.normalize_ap else '', self.average_mAP)
-            # print '\tAverage-mRecall: {}'.format(self.average_mRecall)
-            # print '\tAverage-mPrecision: {}'.format(self.average_mPrecision)
+            print('[RESULTS] Performance on ActivityNet detection task.')
+            print('[RESULTS] Using %d annotation segment(s) per instance' % self.evaluate_with_multi_segments if self.evaluate_with_multi_segments and self.load_extra_annotations else '')
+            print('\tAverage-mAP{}: {}'.format('_N' if self.normalize_ap else '', self.average_mAP))
+            # print('\tAverage-mRecall: {}'.format(self.average_mRecall))
+            # print('\tAverage-mPrecision: {}'.format(self.average_mPrecision))
 
     def wrapper_analyze_fp_error_types(self):
         self.fp_error_types_legned = {'True Positive': 0,
@@ -301,7 +288,7 @@ class ActionDetectorDiagnosis(object):
                                       'Confusion Err': 4,
                                       'Background Err': 5}
 
-        self.fp_error_types_inverse_legned = dict([(v, k) for k, v in self.fp_error_types_legned.iteritems()])
+        self.fp_error_types_inverse_legned = dict([(v, k) for k, v in self.fp_error_types_legned.items()])
 
         fp_error_types = Parallel(n_jobs=len(self.tiou_thresholds))(
                             delayed(analyze_fp_error_types)(
@@ -343,7 +330,7 @@ class ActionDetectorDiagnosis(object):
         # Computes the average-mAP gain after removing each error type
         self.ap_gain, self.average_mAP_gain = {}, {}
 
-        for err_name, err_code in self.fp_error_types_legned.iteritems():
+        for err_name, err_code in self.fp_error_types_legned.items():
             if err_code:
                 self.ap_gain[err_name] = np.zeros((len(self.tiou_thresholds),
                                         len(self.activity_index)))
@@ -374,9 +361,9 @@ class ActionDetectorDiagnosis(object):
                 self.average_mAP_gain[err_name] = self.ap_gain[err_name].mean() - self.average_mAP 
 
         if self.verbose:
-            print '[DIAGNOSIS] Analysis of false positive error types.'
-            print '\tPercentage of each error type:\n{}'.format(self.fp_error_types_precentage_df)
-            print '\tAverage mAP gain after removing each error type:\n{}'.format(self.average_mAP_gain)
+            print('[DIAGNOSIS] Analysis of false positive error types.')
+            print('\tPercentage of each error type:\n{}'.format(self.fp_error_types_precentage_df))
+            print('\tAverage mAP gain after removing each error type:\n{}'.format(self.average_mAP_gain))
 
 
 def compute_average_precision_detection(ground_truth, prediction, tiou_thresholds=np.linspace(0.5, 0.95, 10),

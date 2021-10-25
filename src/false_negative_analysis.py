@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 from action_detector_diagnosis import ActionDetectorDiagnosis
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -8,6 +7,7 @@ import os
 from collections import OrderedDict
 from matplotlib import gridspec, rc
 import matplotlib as mpl
+import matplotlib.font_manager
 mpl.use('Agg')
 params = {'font.family': 'serif','font.serif': 'Times',
             'text.usetex': True,
@@ -37,8 +37,9 @@ def fn_distribution_by_characteristic(fn_error_analysis, characteristic_name):
 
         characteristic_distribution_df[tiou] = pd.DataFrame(characteristic_distribution).T.fillna(0)
     
-    characteristic_distribution_df_mean = characteristic_distribution_df.values()[0].copy()
-    for this_characteristic_distribution_df in characteristic_distribution_df.values()[1:]:
+    x = list(characteristic_distribution_df.values())
+    characteristic_distribution_df_mean = x[0].copy()
+    for this_characteristic_distribution_df in x[1:]:
         characteristic_distribution_df_mean += this_characteristic_distribution_df
     characteristic_distribution_df['avg'] = characteristic_distribution_df_mean / len(characteristic_distribution_df)
 
@@ -69,8 +70,9 @@ def fn_distribution_by_pairwaise_characteristics(fn_error_analysis, characterist
 
         characteristic_distribution_df[tiou] = pd.DataFrame(characteristic_distribution).T.fillna(0)
     
-    characteristic_distribution_df_mean = characteristic_distribution_df.values()[0].copy()
-    for this_characteristic_distribution_df in characteristic_distribution_df.values()[1:]:
+    x = list(characteristic_distribution_df.values())
+    characteristic_distribution_df_mean = x[0].copy()
+    for this_characteristic_distribution_df in x[1:]:
         characteristic_distribution_df_mean += this_characteristic_distribution_df
     characteristic_distribution_df['avg'] = characteristic_distribution_df_mean / len(characteristic_distribution_df)
 
@@ -135,7 +137,7 @@ def plot_fn_analysis(fn_error_analysis, save_filename,
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.yaxis.grid(True, linestyle='dotted')
-    plt.axes().set_axisbelow(True)
+    ax.set_axisbelow(True)
     ax.xaxis.set_tick_params(width=0)
     ax.yaxis.set_tick_params(size=10, direction='in', width=2)
     for axis in ['bottom','left']:
@@ -145,10 +147,12 @@ def plot_fn_analysis(fn_error_analysis, save_filename,
     plt.ylabel('False Negative $(\%)$', fontsize=fontsize)
     plt.tight_layout()
     plt.ylim(0,1.1*100)
-    fig.savefig(save_filename,bbox_inches='tight')
+    fig.savefig(save_filename, bbox_inches='tight')
     print('[Done] Output analysis is saved in %s' % save_filename)
 
 def main(ground_truth_filename, subset, prediction_filename, output_folder, is_thumos14):
+    os.makedirs(output_folder, exist_ok=True)
+
     if not is_thumos14:
         if subset == 'testing':
             # ActivityNet testing
@@ -198,7 +202,6 @@ def main(ground_truth_filename, subset, prediction_filename, output_folder, is_t
                                                 min_tiou_thr=0.1,
                                                 subset=subset, 
                                                 verbose=True, 
-                                                check_status=True,
                                                 load_extra_annotations=True,
                                                 characteristic_names_to_bins=characteristic_names_to_bins,
                                                 normalize_ap=True,

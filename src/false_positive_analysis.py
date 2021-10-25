@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 from action_detector_diagnosis import ActionDetectorDiagnosis
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -8,6 +7,7 @@ import os
 from collections import OrderedDict
 from matplotlib import gridspec, rc
 import matplotlib as mpl
+import matplotlib.font_manager
 mpl.use('Agg')
 params = {'font.family': 'serif','font.serif': 'Times',
             'text.usetex': True,
@@ -59,7 +59,7 @@ def split_predictions_by_score_ranges(fp_error_analysis, groups):
                               'Localization Err': 3,
                               'Confusion Err': 4,
                               'Background Err': 5}
-    fp_error_types_inverse_legned = dict([(v, k) for k, v in fp_error_types_legned.iteritems()])
+    fp_error_types_inverse_legned = dict([(v, k) for k, v in fp_error_types_legned.items()])
 
     for g in range(groups):
         filtered_prediction[g] = pd.concat(filtered_prediction_df_list[g], ignore_index=True)
@@ -145,17 +145,17 @@ def subplot_error_type_impact(fig, ax, values, labels, colors, xlabel, ylabel, t
 def plot_fp_analysis(fp_error_analysis, save_filename, 
                      colors=['#33a02c','#b2df8a','#1f78b4','#fb9a99','#e31a1c','#a6cee3'],
                      error_names=['True Positive', 'Double Detection Err','Wrong Label Err', 'Localization Err', 'Confusion Err', 'Background Err'],
-                     figsize=(10,5), fontsize=24):
+                     figsize=(10,4.42), fontsize=24):
 
     values,labels = [],[]
     _, _, fp_error_types_precentage_df = split_predictions_by_score_ranges(fp_error_analysis,fp_error_analysis.limit_factor)
-    order = np.array([4,2,5,3,1,0])
-    for this_limit_factor, this_fp_error_types_precentage_df  in fp_error_types_precentage_df.iteritems():
-        values+=[this_fp_error_types_precentage_df['avg'].values[order]]
+
+    for this_limit_factor, this_fp_error_types_precentage_df  in fp_error_types_precentage_df.items():
+        values+=[this_fp_error_types_precentage_df['avg'].values]
         labels+=['$%dG$' % (this_limit_factor+1)]
 
     fig = plt.figure(figsize=figsize)
-    grid = plt.GridSpec(1, 5)
+    grid = plt.GridSpec(1, 5, wspace=1.75, right=1.00)
 
     lgd = subplot_fp_profile(fig=fig, ax=fig.add_subplot(grid[:-2]),
                              values=values, labels=labels, colors=colors,
@@ -164,21 +164,21 @@ def plot_fp_analysis(fp_error_analysis, save_filename,
                              title='False Positive Profile', fontsize=fontsize, 
                              ncol=3, legend_loc=(-0.15,1.15))
 
-    order = np.array([4,0,1,3,2])
     subplot_error_type_impact(fig=fig, ax=fig.add_subplot(grid[-2:]),
-                              values=np.array([fp_error_analysis.average_mAP_gain.values()]).T[order,:], 
-                              labels=np.array(fp_error_analysis.average_mAP_gain.keys())[order], 
-                              colors=colors[::-1],
+                              values=list(fp_error_analysis.average_mAP_gain.values()),
+                              labels=list(fp_error_analysis.average_mAP_gain.keys()),
+                              colors=colors[1:],
                               xlabel='Error Type', ylabel='Average-mAP$_N$\nImprovment $(\%)$',
                               title='Removing Error Impact', fontsize=fontsize,
-                              top=np.ceil(np.max(fp_error_analysis.average_mAP_gain.values())*100*1.1))
+                              top=np.ceil(np.max(list(fp_error_analysis.average_mAP_gain.values()))*100*1.1))
     
-    plt.tight_layout()
-    fig.savefig(save_filename,box_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(save_filename, bbox_extra_artists=(lgd,), bbox_inches='tight')
     print('[Done] Output analysis is saved in %s' % save_filename)
 
 
 def main(ground_truth_filename, subset, prediction_filename, output_folder, is_thumos14):
+    os.makedirs(output_folder, exist_ok=True)
+
     if not is_thumos14:
         if subset == 'testing':
             # ActivityNet testing
@@ -211,7 +211,6 @@ def main(ground_truth_filename, subset, prediction_filename, output_folder, is_t
                                                 min_tiou_thr=0.1,
                                                 subset=subset, 
                                                 verbose=True, 
-                                                check_status=True,
                                                 load_extra_annotations=True,
                                                 characteristic_names_to_bins=characteristic_names_to_bins,
                                                 normalize_ap=True,

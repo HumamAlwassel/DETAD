@@ -9,19 +9,24 @@ If you find any piece of code valuable for your research, please cite this work:
   title={Diagnosing Error in Temporal Action Detectors},
   author={Alwassel, Humam and Caba Heilbron, Fabian and Escorcia, Victor and Ghanem, Bernard},
   booktitle={The European Conference on Computer Vision (ECCV)},
-  month={September}
+  month={September},
   year={2018}
 }
 ```
 
 # How to run it?
 
-> :warning: **DETAD current code is based on Python 2. Switching to Python 3 might result in _logical_ errors in the false postivie analysis.** Please either use the Python 2 environment we provide in environment.yml, or make the suggested fixes from this [pull request](https://github.com/HumamAlwassel/DETAD/pull/8) if you are using your own Pyhton 3 environment. In either case, you should verify that you can reproduce the same example plots in [sample_output](sample_output/).
+> :warning: **We have updated the code to work correctly on Python 3.** Please pull the latest version and install the new conda environment + system packages as detailed below.**
+
+Install the following system packages (LaTex + fonts):
+```
+sudo apt-get install texlive-latex-extra texlive-fonts-recommended cm-super
+```
 
 Install conda, create the environment from the `environment.yml` file, and then activate the environment:
 ```
 conda env create -f environment.yml
-source activate detad
+conda activate detad
 ```
 
 Run the false positive analysis (the other two analyses are run in a similar way):

@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 from action_detector_diagnosis import ActionDetectorDiagnosis
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -9,6 +8,7 @@ from collections import OrderedDict
 from utils import interpolated_prec_rec
 from matplotlib import gridspec, rc
 import matplotlib as mpl
+import matplotlib.font_manager
 mpl.use('Agg')
 params = {'font.family': 'serif','font.serif': 'Times',
             'text.usetex': True,
@@ -30,8 +30,8 @@ def compute_mAP_N(result,this_cls_pred,this_cls_gt):
         fp[tidx,pd.isnull(this_cls_pred[result.matched_gt_id_cols[tidx]]).values] = 1
         tp[tidx,~(pd.isnull(this_cls_pred[result.matched_gt_id_cols[tidx]]).values)] = 1
 
-    tp_cumsum = np.cumsum(tp, axis=1).astype(np.float)
-    fp_cumsum = np.cumsum(fp, axis=1).astype(np.float)
+    tp_cumsum = np.cumsum(tp, axis=1).astype(float)
+    fp_cumsum = np.cumsum(fp, axis=1).astype(float)
     recall_cumsum = tp_cumsum / len(np.unique(this_cls_gt['gt-id']))
     precision_cumsum = recall_cumsum * result.average_num_instance_per_class / (recall_cumsum * result.average_num_instance_per_class + fp_cumsum)
 
@@ -180,6 +180,8 @@ def plot_sensitivity_analysis(sensitivity_analysis, save_filename,
     print('[Done] Output analysis is saved in %s' % save_filename)
 
 def main(ground_truth_filename, subset, prediction_filename, output_folder, is_thumos14):
+    os.makedirs(output_folder, exist_ok=True)
+
     if not is_thumos14:
         if subset == 'testing':
             # ActivityNet testing
@@ -232,7 +234,6 @@ def main(ground_truth_filename, subset, prediction_filename, output_folder, is_t
                                                 min_tiou_thr=0.1,
                                                 subset=subset, 
                                                 verbose=True, 
-                                                check_status=True,
                                                 load_extra_annotations=True,
                                                 characteristic_names_to_bins=characteristic_names_to_bins,
                                                 normalize_ap=True,
