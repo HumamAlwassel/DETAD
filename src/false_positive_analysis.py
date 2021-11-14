@@ -151,7 +151,7 @@ def plot_fp_analysis(fp_error_analysis, save_filename,
     _, _, fp_error_types_precentage_df = split_predictions_by_score_ranges(fp_error_analysis,fp_error_analysis.limit_factor)
 
     for this_limit_factor, this_fp_error_types_precentage_df  in fp_error_types_precentage_df.items():
-        values+=[this_fp_error_types_precentage_df['avg'].values]
+        values+=[[this_fp_error_types_precentage_df['avg'][k] for k in error_names]]
         labels+=['$%dG$' % (this_limit_factor+1)]
 
     fig = plt.figure(figsize=figsize)

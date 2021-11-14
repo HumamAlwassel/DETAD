@@ -16,7 +16,7 @@ If you find any piece of code valuable for your research, please cite this work:
 
 # How to run it?
 
-> :warning: **We have updated the code to work correctly on Python 3.** Please pull the latest version and install the new conda environment + system packages as detailed below.**
+> :warning: **We have updated the code to work correctly on Python 3.** Please pull the latest version and install the new conda environment + system packages as detailed below.
 
 Install the following system packages (LaTex + fonts):
 ```
@@ -32,10 +32,10 @@ conda activate detad
 Run the false positive analysis (the other two analyses are run in a similar way):
 ```
 cd src
-python false_positive_analysis.py --ground_truth_filename ../data/activity_net_train_val_extra_characteristics.v1-3.min.json --subset validation --prediction_filename ../data/anet18_winner_validation.json --output_folder ../sample_output/validation
+python false_positive_analysis.py --ground_truth_filename ../data/activity_net_train_val_extra_characteristics.v1-3.min.json --subset validation --prediction_filename ../data/anet18_winner_validation.json --output_folder ../sample_output/activitynet/validation
 ``` 
 
-The code will produce PFD files with the analysis results in the `--output_folder` specified. Take a look at the `sample_output` folder for sample analysis results for a sample method on the validation and testing ActivityNet v1.3 dataset. We thank Tianwei Lin (the 2018 ActivityNet Challenge winner of the Temporal Action Localization Task) for providing us with a sample submission file on the ActivityNet dataset.
+The code will produce PFD files with the analysis results in the `--output_folder` specified. Take a look at the `sample_output` folder for sample analysis results for a sample method on the validation and testing subset of ActivityNet v1.3 dataset and a sample method on the testing subset of THUMOS14 dataset. We thank Tianwei Lin (the 2018 ActivityNet Challenge winner of the Temporal Action Localization Task) for providing us with a sample submission file on the ActivityNet dataset.
 
 # What datasets can you use?
 
